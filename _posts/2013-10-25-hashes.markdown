@@ -1,0 +1,176 @@
+---
+layout: post
+title: '哈希'
+date: 2013-10-25 16:52
+post-link: http://perl101.org/hashes.html
+---
+
+### 哈希是键/值对
+
+如果你想按名字查询，那么需要哈希。哈希的键必须唯一，但值可以是任意标量。
+
+有时候你仍然会看到人们称它为“关联数组”，但不要想当然的把它作为数组。
+
+### 通过键/值对列表来创建哈希
+
+使用键/值对列表创建哈希：
+
+```perl
+my %stooges = (
+    'Moe', 'Howard',
+    'Larry', 'Fine',
+    'Curly', 'Howard',
+    'Iggy', 'Pop',
+);
+```
+
+`=>` 称为胖逗号，它与逗号相同，前面的单词加上引号：
+
+```perl
+my %stooges = (
+    Moe   => 'Howard',
+    Larry => 'Fine',
+    Curly => 'Howard',
+    Iggy  => 'Pop',
+);
+```
+
+哈希在列表环境中变成键/值对列表。
+
+```perl
+my @hash_as_an_array = %stooges;
+# Contains ( 'Curly', 'Haward', 'Larry', 'Fine', etc... )
+```
+
+正如哈希的键和值顺序事实上随机的一样，平展开的哈希键/值顺序也是随机的。
+
+### 利用花括号访问独立的哈希条目
+
+利用花括号代替中括号来获取哈希的值。
+
+```perl
+print $stooges{'Iggy'};
+# Prints "Pop"
+```
+
+用同样的方式设置值：
+
+```perl
+$stooges{'Shemp'} = 'Howard';
+```
+
+覆盖现有的值：
+
+```perl
+$stooges{'Iggy'} = 'Ignatowski';
+```
+
+从哈希中删除条目：
+
+```perl
+delete $stooges{'Curly'};
+```
+
+注意：`delete` 不会删除文件。`unlink` 才会。
+
+```perl
+unlink $stooges{'Moe'};
+# Deletes a file called 'Howard';
+```
+
+### 获取哈希的键/值
+
+使用 `keys` 和 `values` 关键字：
+
+```perl
+my @stooge_first_names = keys %stooges;
+
+my @stooge_last_names  = values %stooges;
+```
+
+这会保证键和值的顺序相匹配。
+
+### 哈希键自引用单词
+
+如果你的哈希键是单个词，那么你不需要引用它。
+
+```perl
+$stooges{Curly} = 'Howard';
+```
+
+### 哈希只能包含标量
+
+在 Perl 哈希中的值只能是标量。它不能包含数组或数组中的列表。
+
+```perl
+$hash{comedians} = @stooges;
+# Assigns the length of @stooges to the value
+```
+
+如果你想要在哈希中存储数组，你将需要使用引用。
+
+### 哈希是无序的
+
+`keys %hash` 和 `values %hash` 的顺序实事上是随机的。每次执行程序都将不同。
+它也与添加时的顺序不相关。
+
+### 你无法排序哈希
+
+在 Perl 中排序哈希的想法不存在，因为哈希是无序的。你可以排序哈希的键，
+或哈希的值，它们只是列表而已。
+
+### 使用列表赋值合并哈希
+
+要合并两个哈希，将它们看作列表，并赋给哈希。
+
+```perl
+my %new_hash = (%hash1, %hash2);
+```
+
+等号右边是来自两个哈希的键/值对长列表。然后将该列表赋给 `%new_hash`。
+如果在 `%hash2` 中的任意键与 `%hash1` 中的键重复，那么 `%hash2` 中的键/值
+对具有更高的优先级，因为它们赋值更晚。
+
+### 何时使用哈希，何时使用数组
+
+如果你做线性、有序的序列，那么使用数组。
+
+* 要读取的文件列表
+* 队列中的人列表
+
+如果你做想要查询的无序的事，那么使用哈希。
+
+* 姓索引，通过名字查询
+* 显示文件大小的索引，按名称查询
+
+### `defined` 与 `exists` 的差异
+
+使用 `defined` 来看哈希元素是否有 `undef` 之外的值。如果哈希元素有任意 `undef`
+之外的值，甚至求值为假的 0 和 ""(空字符串)，都将返回真。
+
+使用 `exists` 来看哈希元素是否已被初始化，即便它没有被定义（如，它有值
+`undef`）。
+
+```perl
+my %h;
+$h{'foo'} = undef;
+
+defined $h{'foo'} ? print 1 : print 0;
+# $h{'foo'} is not defined, so it prints 0
+exists $h{'foo'} ? print 1 : print 0;
+# but it has been initialized nonetheless, and so this line prints 1
+```
+
+哈希元素仅被定义后才为真。它仅在存在后才能被定义。
+
+然而，哈希元素未被定义仍能存在。这意味着即便它存在，也不会返回真。
+
+```perl
+if ( $h{'foo'} ) {
+    print 'true';
+}
+else {
+    print 'false';
+}
+# prints 'false'; since $h{'foo'} is not defined, it cannot be true
+```

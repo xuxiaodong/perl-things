@@ -1,0 +1,74 @@
+---
+layout: post
+title: '术语'
+date: 2013-10-24 16:05
+post-link: http://perl101.org/terms.html
+---
+
+### Perl、perl 及 PERL
+
+Perl 指语言名称。
+
+perl 为解释器，它用来执行 Perl 源文件。
+
+PERL 则是错误的称法。
+
+### Perl 不是溯写词
+
+回溯词“Practical Extraction and Reporting Language”和“Pathologically Eclectic
+Rubbish Lister”是在 Perl 这个名称被创造之后才出现的。
+
+### There Is More Than One Way To Do It
+
+“办法不只一种”，这是 Perl 的座右铭，它拼为 *TMTOWTDI*，读作“Tim Toady”。
+
+### Larry
+
+Larry 指 Larry Wall，他是 Perl 的发明人及其领袖。当前，他虽然主要生活在 Perl 6
+岛上，但仍然在对 Perl 5 作重要贡献。
+
+### Randal
+
+Randal 指 Randal Schwartz，他是最大的 Perl 咨询及培训公司之一 Stonehenge
+的所有者。他也花时间在 IRC 及其他论坛上帮助 Perl 新手。
+
+Larry 和 Randal 也是 *Programming Perl* 的主要作者。
+
+### Damian
+
+Damian 指 Damian Conway，一个偏心的邪恶天才及 Perl 6 大师。*Perl Best Practices*
+一书是他的创新工作，激励人们改善代码写作质量。
+
+### 懒惰、急躁和傲慢
+
+程序员的三大美德是懒惰、急躁和傲慢。
+
+懒惰的程序员将重用他们完成的成果。此美德鼓励通过仅写一次来让代码得到重用。
+
+急躁的程序员将更快速的完成工作，并利用机器来完成他们不想手动去做的任务。
+
+傲慢的程序员编写的代码更高效、更清晰、以及更具有可读性，他们因此而自豪。
+
+Perl 正是建立在这些美德之上。
+
+### DWIM
+
+即 Do What I Mean，我的意图紧密相关，但智能的机器并不存在。
+
+### DTRT
+
+即 Do The Right Thing，Perl 试图做正确的事，这与 DWIM 尽可能接近。
+
+### 脚本与程序
+
+Perl 程序常被称为与 Windows 批处理文件和 Unix shell
+脚本相似的“脚本”。事实上它们不是。Perl 程序就是真正的程序。
+
+Perl 也被称为“脚本语言”，尤其是在 1990 年代当“Web 脚本”帮助推进 Web
+时变得广泛流行。然而，Perl 每方面的能力都跟 Java、C++、Ruby、COBOL
+或其他你能叫出的任何编程语言一样多。称它“脚本语言”否认了它的强大、灵活
+及优雅。
+
+Perl、Python、PHP、Ruby 这类被归入次级名称“脚本语言”下的语言，应当称为
+“动态语言”更正确。学会认为 Perl 是一门编程语言将帮助你欣赏 Perl 的强大，
+并推动 Perl 得到应有的地位。

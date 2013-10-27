@@ -1,0 +1,130 @@
+---
+layout: post
+title: '字符串'
+date: 2013-10-25 13:34
+post-link: http://perl101.org/strings.html
+---
+
+### 利用内插将字符串嵌入到另一个字符串中
+
+双引号（""）字符串能够内插其他变量。
+
+```perl
+my $name     = "Inigo Montoya";
+my $relative = "father";
+
+print "My name is $name, you killed my $relative";
+```
+
+### 非内插字符串
+
+如果你不想要内插，那么使用单引号（''）。
+
+```perl
+print 'You may have won $1,000,000';
+```
+
+或者，你也可以转义特殊字符（印记）。
+
+```perl
+print "You may have won \$1,000,000";
+```
+
+### 在字符串中使用 Email 地址要小心
+
+此 Email 地址并不是你想要的：
+
+```perl
+my $email = "andy@foo.com";
+print $email;
+# Prints "andy.com"
+```
+
+这里的问题是 *@foo* 作为数组被内插了。如果你打开了 `use
+warnings`，那么此类问题就很明显了：
+
+```perl
+$ perl foo.pl
+
+Possible unintended interpolation of @foo in string at foo line 1.
+andy.com
+```
+
+解决办法是，要么使用非内插的引号：
+
+```perl
+my $email = 'andy@foo.com';
+my $email = q{andy@foo.com};
+```
+
+要么转义 *@*：
+
+```perl
+my $email = "andy\@foo.com";
+```
+
+好的着色代码编辑器将帮助你防止此类问题。
+
+### 使用 `length()` 获得字符串的长度
+
+```perl
+my $str = "Chicago Perl Mongers";
+print length( $str ); # 20
+```
+
+### 使用  `substr()` 提取字符串
+
+`substr()` 能够做各种字符串提取：
+
+```perl
+my $x = "Chicago Perl Mongers";
+
+print substr( $x, 0, 4 );   # Chic
+print substr( $x, 13 );     # Mongers
+print substr( $x, -4 );     # gers
+```
+
+### 关于字符串 vs. 数字不必担心太多
+
+不像其他语言，Perl 不知道字符串来自于数字。它将做最好的 DTRT。
+
+```perl
+my $phone    = "312-588-2300";
+
+my $exchange = substr( $phone, 4, 3 ); # 588
+print sqrt( $exchange ); # 24.2487113059643
+```
+
+### 利用 `++` 操作符自增非数字字符串
+
+你能够利用 `++` 来自增字符串。字符串`abc`自增后变成`abd`。
+
+```perl
+$ cat foo.pl
+
+$a = 'abc'; $a = $a + 1;
+$b = 'abc'; $b += 1;
+$c = 'abc'; $c++;
+
+print join ", ", ( $a, $b, $c );
+
+$ perl -l foo.pl
+
+1, 1, abd
+```
+
+注意：你必须使用 `++` 操作符。在上述示例中，字符串`abc`被转换成
+*0*，然后再自增。
+
+### 利用 `heredocs` 创建长字符串
+
+Heredocs 允许连续文本，直到遇到下一个标记。支持内插，除非标记使用单引号。
+
+```perl
+my $page = <<HERE;
+<html>
+    <head><title>$title</title></head>
+    <body>This is a page.</body>
+</html>
+HERE
+```

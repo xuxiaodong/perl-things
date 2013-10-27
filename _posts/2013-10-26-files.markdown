@@ -1,0 +1,162 @@
+---
+layout: post
+title: '文件'
+date: 2013-10-26 20:27
+post-link: http://perl101.org/files.html
+---
+
+### 利用 `open` 和 `<>` 操作符更易读取文件
+
+使用 Perl 打开并读取文件很简单。下面的示例代码演示如何打开文件，
+一行一行地读取，检查匹配正则表达式的文本，以及输出匹配的行。
+
+```perl
+open( my $fh, '<', $filename ) or die "Can't open $filename: $!";
+while ( my $line = <$fh> ) {
+    if ( $line =~ /wanted text/ ) {
+        print $line;
+    }
+}
+close $fh;
+```
+
+总是检查 `open` 的返回码是否为真。如果为假，其结果在 `$!` 中。
+
+### 利用 `chomp` 移除结尾的换行符
+
+从文件读取行时会包含结尾的换行符。假如你有一个文本文件，其第一行是：
+
+```
+Aaron
+```
+
+`Aaron` 实际上是 6 个字符`Aaron\n`。此代码将失败：
+
+```perl
+my $line = <$fh>;
+if ( $line eq 'Aaron' ) {
+    # won't reach here, because it's really "Aaron\n";
+}
+```
+
+要移除 `\n` 及结尾的其他任意空白，调用 `chomp`。
+
+```perl
+my $line = <$fh>;
+chomp $line;
+```
+
+现在 `$line` 为 5 个字符长。
+
+### 利用 `$/` 更改行分隔符
+
+可以更改输入记录分隔符 `$/`，其默认设置为 `\n`。
+
+设置 `$/` 一次读取一段。设置 `$/` 为 `undef` 将一次读取整个文件。
+参阅 [perlvar][v] 了解细节。
+
+### 一次读取整个文件
+
+你将注意到新手在读取文件时会使用下述两种方法之一：
+
+```perl
+open (FILE,$filename) || die "Cannot open '$filename': $!";
+undef $/;
+my $file_as_string = <FILE>;
+```
+
+或：
+
+```perl
+open (FILE,$filename) || die "Cannot open '$filename': $!";
+my $file_as_string = join '', <FILE>;
+```
+
+选择两种中的前者。第二种读取所有行到数组，然后组合成一个大字符串。
+第一种仅读取到字符串，不会间接创建行列表。
+
+然而最佳的方式是像这样：
+
+```perl
+my $file_as_string = do {
+    open( my $fh, $filename ) or die "Can't open $filename: $!";
+    local $/ = undef;
+    <$fh>;
+};
+```
+
+`do` 块返回块中最后求解的值。此方法将 `$/` 设置为局部作用域，所以
+超出块范围会设置为默认值。如果没有局部化 `$/`，那么它将保留设置的
+值，其他代码段可能并不期望它被设置为 `undef`。
+
+下面是另一种方法：
+
+```perl
+use File::Slurp qw( read_file );
+my $file_as_string = read_file( $filename );
+```
+
+*File::Slurp* 是一次性读取和写入的有用模块，它将在背后做魔术般的快速
+处理。
+
+### 利用 `glob()` 获取文件列表
+
+使用标准的 Shell 展开模式来获取文件列表。
+
+```perl
+my @files = glob( "*" );
+```
+
+将它们传递给 `grep` 来做快速过滤。例如，要获取文件而非目录：
+
+```perl
+my @files = grep { -f } glob( "*" );
+```
+
+### 使用 `unlink` 移除文件
+
+Perl 内置函数 `delete` 用来删除哈希的元素，而非文件系统中的文件。
+
+```perl
+my %stats;
+
+$stats{filename} = 'foo.txt';
+
+unlink $stats{filename}; # RIGHT: Removes "foo.txt" from the filesystem
+
+delete $stats{filename}; # WRONG: Removes the "filename" element from %stats
+```
+
+术语 `unlink` 来自于 Unix 从目录节点移除文件链接的想法。
+
+### 在 Windows 下使用 Unix 风格的目录
+
+即使 Unix 使用 `/usr/local/bin`，而 Windows 使用 `C:\foo\bar\bat` 这样的路径，
+你仍然能够在文件名中使用斜杠。
+
+```perl
+my $filename = 'C:/foo/bar/bat';
+open( my $fh, '<', $filename ) or die "Can't open $filename: $!";
+```
+
+在这种情况下，Perl 在打开文件前魔术化地将 `C:/foo/bar/bat` 更改为 `C:\foo\bar\bat`。
+这也会防止文件名包含未引起的反斜杠所带来的问题。
+
+```perl
+my $filename = "C:\tmp";
+```
+
+`$filename` 包含 5 个字符：C、:、tab 字符、m、及 p。实际上，它应该写成：
+
+```perl
+my $filename = 'C:\tmp';
+my $filename = "C:\\tmp";
+```
+
+或者你让 Perl 来照料它：
+
+```perl
+my $filename = 'C:/tmp';
+```
+
+[v]: http://perldoc.perl.org/perlvar.html

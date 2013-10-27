@@ -1,0 +1,200 @@
+---
+layout: post
+title: '正则表达式'
+date: 2013-10-26 10:06
+post-link: http://perl101.org/regexes.html
+---
+
+正则表达式比此处所介绍的主题要大得多，确信你理解了这些概念。对于教程，
+可以参阅 [perlrequick][q] 或 [perlretut][t]。而权威的文档，则能够参阅
+[perlre][r]。
+
+### 匹配和替换返回数量
+
+`m//` 和 `s///` 操作符分别返回匹配或替换的数目。你既可以直接使用该数目，
+也可以检查其真实性。
+
+```perl
+if ( $str =~ /Diggle|Shelley/ ) {
+    print "We found Pete or Steve!\n";
+}
+
+if ( my $n = ($str =~ s/this/that/g) ) {
+    print qq{Replaced $n occurrence(s) of "this"\n};
+}
+```
+
+### 不要在未检查匹配成功的情况下使用捕获变量
+
+除非匹配成功，捕获变量 `$1` 等是无效的，并且它们不会被清理。
+
+```perl
+# BAD: Not checked, but at least it "works".
+my $str = 'Perl 101 rocks.';
+$str =~ /(\d+)/;
+print "Number: $1"; # Prints "Number: 101";
+
+# WORSE: Not checked, and the result is not what you'd expect
+$str =~ /(Python|Ruby)/;
+print "Language: $1"; # Prints "Language: 101";
+```
+
+替代的，你必须检查匹配的返回值：
+
+```perl
+# GOOD: Check the results
+my $str = 'Perl 101 rocks.';
+if ( $str =~ /(\d+)/ ) {
+    print "Number: $1"; # Prints "Number: 101";
+}
+
+if ( $str =~ /(Python|Ruby)/ ) {
+    print "Language: $1"; # Never gets here
+}
+```
+
+### 常用匹配选项
+
+#### `/i`：不区分大小写
+
+#### `/g`：匹配多次
+
+```perl
+$var = "match match match";
+
+while ($var =~ /match/g) { $a++; }
+print "$a\n"; # prints 3
+
+$a = 0;
+$a++ foreach ($var =~ /match/g);
+print "$a\n"; # prints 3
+```
+
+#### `/m`：更改 `^` 和 `$` 的意义
+
+正常情况下，`^` 意为字符串的开头，而 `$` 为字符串的结尾。`/m`
+使它们分别意为行首和行尾。
+
+```perl
+$str = "one\ntwo\nthree";
+@a = $str =~ /^\w+/g;  # @a = ("one");
+@b = $str =~ /^\w+/gm; # @b = ("one","two","three")
+```
+
+不管 `/m` 使用 `\A` 和 `\z` 来匹配字符串的开头和结尾。`\Z` 与 `\z`
+相同，除了它会忽略最后的换行。
+
+#### `/s`：使 `.` 也匹配换行
+
+```perl
+$str = "one\ntwo\nthree\n";
+$str =~ /^(.{8})/s;
+print $1; # prints "one\ntwo\n"
+```
+
+### 捕获变量 `$1` 及之友
+
+捕获括号对的内容被存储到数字变量中。括号从左到右分配：
+
+```perl
+my $str = "abc";
+$str =~ /(((a)(b))(c))/;
+print "1: $1 2: $2 3: $3 4: $4 5: $5\n";
+# prints: 1: abc 2: ab 3: a 4: b 5: c
+```
+
+捕获括号及变量的数目没有上限。
+
+### 利用 `?:` 避免捕获
+
+如果括号跟着 `?:`，那么该分组不会被捕获。如果你不想保存匹配的内容，
+那么这会十分有用：
+
+```perl
+my $str = "abc";
+$str =~ /(?:a(b)c)/;
+print "$1\n"; # prints "b"
+```
+
+### 利用 `/x` 选项使正则表达式更易读
+
+如果你在使用正则表达式时玩了些花样，那么注释它。你可以使用 `/x` 选项
+达到目的。
+
+丑陋的庞然大物：
+
+```perl
+my ($num) = $ARGV[0] =~ m/^\+?((?:(?<!\+)-)?(?:\d*.)?\d+)$/x;
+```
+
+使用 `/x` 允许的空白和注释更可读：
+
+```perl
+my ($num) =
+    $ARGV[0] =~ m/^ \+?        # An optional plus sign, to be discarded
+                (              # Capture...
+                (?:(?<!\+)-)?  # a negative sign, if there's no plus behind it,
+                (?:\d*.)?      # an optional number, followed by a point if a decimal,
+                \d+            # then any number of numbers.
+                )$/x;
+```
+
+除非转义，空白和注释将被去除。
+
+### 利用 `\Q` 和 `\E` 自动引起正则表达式
+
+这会自动转义正则表达式的元字符。不会转义 `$` 符号。
+
+```perl
+my $num = '3.1415';
+print "ok 1\n" if $num =~ /\Q3.14\E/;
+$num = '3X1415';
+print "ok 2\n" if $num =~ /\Q3.14\E/;
+print "ok 3\n" if $num =~ /3.14/;
+```
+
+输出：
+
+```perl
+ok 1
+ok 3
+```
+
+### 对 `s///` 使用 `/e` 选项来执行代码
+
+这将允许任意代码替换正则表达式中的字符串。
+
+```perl
+my $str = "AbCdE\n";
+$str =~ s/(\w)/lc $1/eg;
+print $str; # prints "abcde"
+```
+
+必要时使用 `$1` 及之友。
+
+### 了解何时使用 `study`
+
+`study` 在多数情况下都无用。它所做的是从遍历字符串的第一个 256
+字节处开始创建表。这意味着如果你有 1,000 个字符长的字符串，你将
+使用常量字符开始搜索许多字符串。之后，匹配器才跳转到正确的位置。
+例如：
+
+```
+"This is a very long [... 900 characters skipped...] string that I have here,
+ending at position 1000"
+```
+
+现在，如果你再次匹配正则表达式 `lcky`，匹配器将试图寻找要匹配的第一个字母
+`l`。那将扫描前面的 900+ 个字符，直到你得到它。但 `study` 通过在它第一次出现
+的地方构建可能是 256 字节的表，这样扫描器能够跳转到正确的位置并开始匹配。
+
+### 使用 `re => debug` 调试正则表达式
+
+```perl
+-Mre=debug
+```
+
+[q]: http://perldoc.perl.org/perlrequick.html
+[t]: http://perldoc.perl.org/perlretut.html
+[r]: http://perldoc.perl.org/perlre.html
+

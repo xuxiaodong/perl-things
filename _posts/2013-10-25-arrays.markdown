@@ -1,0 +1,291 @@
+---
+layout: post
+title: '数组'
+date: 2013-10-25 15:05
+post-link: http://perl101.org/arrays.html
+---
+
+### 简单创建单词数组
+
+`qw` 操作符使创建数组更容易。它意为将引用空白分成列表。
+
+```perl
+# Perl 5
+my @stooges = qw( Larry Curly Moe Iggy );
+# or
+my @stooges = qw(
+    Larry
+    Curly
+    Moe
+    Iggy
+);
+```
+
+在 Perl 6 中，`qw` 更简洁：
+
+```perl
+my @stooges = < Larry Curly Moe Iggy >;
+# or
+my @stooges = <
+    Larry
+    Curly
+    Moe
+    Iggy
+>;
+```
+
+元素不做内插：
+
+```perl
+my @array = qw( $100,000 ); # Perl 5
+my @array = < $100,000 >;   # Perl 6
+```
+
+`@array` 的单一元素是“$100,000”。
+
+### 利用数字值访问数组
+
+要获得数组的单个标量，使用 `[]` 和 `$` 印记。在 Perl 中所有数组都从 0 开始。
+
+```perl
+$stooges[1] # Curly
+```
+
+数组也能使用负偏移从尾端访问。
+
+```perl
+$stooges[-1] # Iggy
+```
+
+读取不存在的元素将得到 `undef`。
+
+```perl
+$stooges[47] # undef
+```
+
+### 数组的长度是标量值
+
+将数组放到标量环境能得到其长度。一些人也喜欢直接使用 `scalar`。
+
+```perl
+my $stooge_count = scalar @stooges; # 4
+
+my $stooge_count = @stooges;        # 4
+```
+
+不要使用 `length` 来获得数组的长度。那只会得到字符串的长度。
+
+```perl
+my $moe_length = length $stooges[@stooges/2];
+                 length $stooges[2];
+                 length 'Moe';
+                 3;
+```
+
+### 数组没有边界
+
+数组没有任何有限的大小，且不必预先声明。数组按需更改其大小。
+
+数组也不稀疏。下列代码创建 10,000 个元素的数组。
+
+```perl
+my @array     = ();
+$array[10000] = 'x';
+```
+
+*@array* 现在具有 10,001 个元素（0-10,000）。它只填入了一个，其他 10,000
+个都是 `undef`。
+
+### 数组会平展，但不会嵌套
+
+不像 PHP，当数组合并时会平展开为一个大列表。
+
+```perl
+my @sandwich       = ( 'PB', 'J' );
+my @other_sandwich = ( 'B', 'L', 'T' );
+my @ingredients    = ( @other_sandwich, @sandwich );
+# ( 'B', 'L', 'T', 'PB', 'J' )
+```
+
+这意味着你不能将一个数组包含到另一个数组或哈希中。那样的话，你将需要使用引用。
+
+### 列表能带扩展的逗号（,）
+
+Perl 最好的特性之一是在列表的尾端能带一个扩展的逗号。例如：
+
+```perl
+my @array = (
+    'This thing',
+    'That thing',
+);
+```
+
+当你编辑代码时，这使添加或者删除项目十分容易，因为你无需将最后一个项目作为特殊情况处理。
+
+```perl
+my @array = (
+    'This thing',
+    'That thing',
+    'The other thing',
+);
+```
+
+### 像队列和堆栈一样使用数组
+
+`shift` 从数组开头移除元素。
+
+```perl
+my $next_customer = shift @customers;
+```
+
+`unshift` 将元素添加到数组的开头。
+
+```perl
+unshift @customers, $line_jumper;
+```
+
+`push` 将元素添加到数组的结尾。
+
+```perl
+push @customers, $dio; # The last in line
+```
+
+`pop` 从数组的结尾移除元素。
+
+```perl
+my $went_home = pop @customers;
+```
+
+### 利用数组分片提取数组的部分元素
+
+数组分片只是使用多个索引访问数组。
+
+```perl
+my @a = 'a'..'z'; # 26 letters
+
+# a, e, i, o, u...
+my @vowels = @a[0,4,8,14,20];
+
+# And sometimes "y"
+push( @vowels, $a[-2] ) if rand > .5;
+```
+
+注意：当访问数组分片时，印记是 `@`，不是
+`$`。因为你返回的是数组，而不是标量。新手常范的错误是使用 `@` 印记而不是 `$`
+访问一个数组元素。那将返回分片，实则是列表。
+
+```perl
+# WRONG: Returns a 1-element list, or 1 in scalar context
+my $z = @a[-1];
+
+# RIGHT: Returns a single scalar element
+my $z = $a[-1];
+```
+
+### 利用数组分片来分配数组块
+
+你能够将数组分片作为左值（*lvalues*），即能赋值给等号左边的值。
+
+```perl
+# Replace vowels with uppercase versions
+@a[0,4,8,14,20] = qw( A E I O U );
+
+# Swap first and last elements
+@a[0,-1] = @a[-1,0];
+```
+
+注意：分片的左边和右边大小必须相同。在等号右边缺少的值将使用 `undef` 换掉。
+
+### 利用 `splice` 就地修改数组
+
+`splice`
+让你拼接数组为另一个数组。让我们来看几个常见的错误做法，那应该能说明它的有用性。
+
+```perl
+my @a = qw(Steve Stu Stan);
+$a[1] = ['Stewart', 'Zane'];
+# @a  = ('Steve', ARRAY(0x841214c), 'Stan')
+# Memory address to an array reference
+
+my @a = qw(Steve Stu Stan);
+my @b = qw(Stewart Zane);
+$a[1] = @b;
+# @a  = ('Steve', 2, 'Stan')
+# Returns a scalar reference, the length of @b
+```
+
+现在使用 `splice`：
+
+```perl
+@a = qw(Steve Stu Stan);
+splice @a, 1, 1, 'Stewart', 'Zane';
+# @a = ('Steve', 'Stewart', 'Zane', 'Stan') 
+# This is just what we wanted
+```
+
+让我们分解 `splice` 的参数列表：首先，我们命名要操作的数组（@a）；
+其次，我们定义偏移（离我们想拼接的列表开始有多远）；第三，我们指定
+拼接的长度；最后，我们列出想要插入的项目。
+
+如果遇到错误，那么通过 `perldoc -f splice` 来了解详情。
+
+### 利用 `map` 处理数组
+
+`map` 本质上是返回列表的 `foreach` 循环。
+
+你可以使用它将数组转换成哈希：
+
+```perl
+my @array = ( 1, 2, 3, 4, 5 );
+my %hash  = map { $_ => $_ * 9 } @array;
+# %hash   = ( 1 => 9, 2 => 18, 3 => 27, 4 => 36, 5 => 45 )
+```
+
+或者变成列表：
+
+```perl
+my @array       = ( 'ReD', 'bLue', 'GrEEN' );
+my @fixed_array = map(ucfirst, map(lc, @array)); # note the nested 'map' functions
+# @fixed_array  = ( 'Red', 'Blue', 'Green' )
+```
+
+### 利用 `grep` 从数组选择项目
+
+`grep` 本质上也是返回列表的 `foreach` 循环。但它不像
+`map`，它只返回导致条件为真的元素。
+
+```perl
+my @array     = ( 0, 1, 2, 3, 4, 5 );
+my @new_array = grep { $_ * 9 } @array;
+# @new_array  = ( 1, 2, 3, 4, 5 );
+```
+
+它将如 `map` 一样修改源数据，然而：
+
+```perl
+my @array     = ( 0, 1, 2, 3, 4, 5 );
+my @new_array = grep { $_ *= 9 } @array;
+# @array      = ( 0, 9, 18, 27, 36, 45 );
+# @new_array  = ( 9, 18, 27, 36, 45 );
+```
+
+我们也可以传递正则表达式给 `grep`。在本例中，我们只想把包含 *Doe*
+的人放到新数组：
+
+```perl
+my @people = (
+    'John Doe',
+    'Jane Doe',
+    'Joe Sixpack',
+    'John Q. Public',
+);
+
+my @does = grep { $_ =~ /\bDoe$/ } @people;
+# @does  = ('John Doe', 'Jane Doe');
+```
+
+或更短的：
+
+```perl
+my @does = grep { /\bDoe$/ } @people;
+```

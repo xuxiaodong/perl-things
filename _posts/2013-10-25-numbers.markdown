@@ -1,0 +1,33 @@
+---
+layout: post
+title: '数字'
+date: 2013-10-25 14:53
+post-link: http://perl101.org/numbers.html
+---
+
+### 小心地测试浮点数的相等性
+
+过度相信计算 IEEE 浮点数是一种错误。例如：
+
+```perl
+print "---\n";
+print "A: ", 2.4, "\n";
+print "B: ", 0.2*12, "\n";
+if ( 0.2*12 == 2.4 ) {
+    print "These are equal.\n";
+}
+else {
+    print "These are not equal.\n";
+}
+
+A: 2.4
+B: 2.4
+These are not equal.
+```
+
+真实地结果是 *0.2* (1/5) 在 IEEE 空间无法被表示为二进制小数。
+
+因此，如果你想要检查浮点数的相等性，那么可以使用 `sprintf` 或类似
+的东东。
+
+参阅 <http://perldoc.perl.org/perlfaq4.html> 了解细节。
