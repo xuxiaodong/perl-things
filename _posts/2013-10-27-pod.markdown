@@ -1,0 +1,119 @@
+---
+layout: post
+title: POD 格式
+date: 2013-10-27 20:48
+post-link: http://perl101.org/pod.html
+---
+
+### 内联文档及格式
+
+POD 允许你在 Perl 代码中使用标记来创建文档。如果你见过 Javadoc 或 PHPdoc，
+它跟它们很相像。
+
+POD 是语言的一部分，并非额外的规范。
+
+### 使用 `=head1` 和 `=head2` 创建标题
+
+```perl
+=head1 MOST IMPORTANT
+
+Blah blah
+
+=head2 Subheading
+
+blah blah
+
+=head2 Subhading
+
+blah blah
+```
+
+### 创建无序列表
+
+要创建这样的列表：
+
+* Wango
+* Tango
+* Fandango
+
+使用：
+
+```perl
+=over
+
+=item * Wango
+
+=item * Tango
+
+=item * Fandango
+
+=back
+```
+
+### 创建有序列表
+
+要创建下面的列表：
+
+1. Visit perl101.org
+2. ???
+3. Profit!
+
+使用：
+
+```perl
+=over
+
+=item 1 Visit perl101.org
+
+=item 2 ???
+
+=item 3 Profit!
+
+=back
+```
+
+### 使用内联标记样式
+
+POD 用 `B<>`、`I<>` 及 `C<>` 分别表示粗体、斜体、代码。
+
+```perl
+B<This is bolded>
+
+I<This is italics>
+
+C<This is code>
+```
+
+标记格式能够嵌套。
+
+### 使用 `L<>` 超链接
+
+`L<>` 既可以链接文档中的关键字，如 `L<Methods>`；也可以链接 URL，如
+`L<http://search.cpan.org`。
+
+### 段落模式 vs. 字面块
+
+段落会自动换行，并由至少一个空行分隔。
+
+```perl
+A literal block is indented at least one space
+and does not
+get
+wrapped.
+```
+
+这来自于：
+
+```perl
+Everything in a paragraph word-wraps automatically.  A paragraph
+is separated by at least one blank line.
+
+    A literal block is indented at least one space
+    and does not
+    get
+    wrapped.
+```
+
+### POD 不会使程序运行变慢
+
+它将在编译时被去除。
