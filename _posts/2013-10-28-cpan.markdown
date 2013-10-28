@@ -1,0 +1,36 @@
+---
+layout: post
+title: CPAN
+date: 2013-10-28 10:45
+post-link: http://perl101.org/cpan.html
+---
+
+CPAN 是所有其他语言羡慕嫉妒恨的魔弹。它是人们贡献的巨大模块仓库。它意为
+*Comprehensive Perl Archive Network*。
+
+### 在 search.cpan.org 搜索模块
+
+<http://search.cpan.org> 是 CPAN 搜索的标准界面。它也包括链向其他站点的
+链接。
+
+### 在 metacpan.org 替代搜索
+
+CPAN 也有一个不同的界面 <http://metacpan.org>。metacpan.org 具有更多的
+特性及用于浏览 CPAN 和发行的链接。
+
+### 在 cpanratings.perl.org 查看关于模块的评论
+
+<http://cpanratings.perl.org> 让你对模块进行打分及评论，在你试用之前，
+不妨看看别人的看法。
+
+### 在 rt.cpan.org 报告 Bug
+
+从 <http://rt.cpan.org> 提交你的 Bug 到 RT。
+
+### 在 annocpan.org 批注模块文档
+
+<http://annocpan.org> 让你对模块文档进行批注，有望让作者在将来合并更改。
+
+### 在 backpan.perl.org 查找模块的旧版本
+
+<http://backpan.perl.org> 具有 CPAN 上的每个模块，甚至包含过时的旧版本。
