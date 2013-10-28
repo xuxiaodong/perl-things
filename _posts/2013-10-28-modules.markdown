@@ -1,0 +1,52 @@
+---
+layout: post
+title: 模块
+date: 2013-10-28 10:13
+post-link: http://perl101.org/modules.html
+---
+
+### 利用 `use lib` 在非标准位置搜索模块
+
+要搜索没有安装到 `@INC` 所指定路径的模块，使用 `lib` 编译指令：
+
+```perl
+use lib '/home/andy/private-lib/';
+use Magic::Foo;
+```
+
+注意：`use lib` 必须置于试图使用 `Magic::Foo` 之前。
+
+### 利用 Module::Starter 创建新模块
+
+`Module::Starter` 及其命令行工具 `module-starter` 创建模块发行套件的基本
+框架，以便发布到 CPAN 上。它包含基本的代码布局、POD 指令、文档片断、基本
+测试、`Makefile.PL` 和 `MANIFEST` 文件、以及 `README` 和 `Changes` 记录
+的开头。
+
+```
+$ module-starter --module=Magic::Foo --module=Magic::Foo::Internals \
+    --author="Andy Lester" --email="andy@perl.org" --verbose
+Created Magic-Foo
+Created Magic-Foo/lib/Magic
+Created Magic-Foo/lib/Magic/Foo.pm
+Created Magic-Foo/lib/Magic/Foo
+Created Magic-Foo/lib/Magic/Foo/Internals.pm
+Created Magic-Foo/t
+Created Magic-Foo/t/pod-coverage.t
+Created Magic-Foo/t/pod.t
+Created Magic-Foo/t/boilerplate.t
+Created Magic-Foo/t/00-load.t
+Created Magic-Foo/.cvsignore
+Created Magic-Foo/Makefile.PL
+Created Magic-Foo/Changes
+Created Magic-Foo/README
+Created Magic-Foo/MANIFEST
+Created starter directories and files
+
+```
+
+### 利用 `h2xs` 创建 XS 模块
+
+如果你想创建 XS 模块，即 Perl 代码与外部 C 代码的接口，那么你将需要使用
+原始的模块开始工具 `h2xs`。`h2xs` 已包含到每个 Perl 发行中，但它可能并没
+有 `Module::Starter` 那么新。除非你需要 XS 代码，否则使用 `Module::Starter`。
