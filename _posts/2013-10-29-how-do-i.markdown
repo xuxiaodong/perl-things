@@ -1,0 +1,55 @@
+---
+layout: post
+title: 如何做...？
+date: 2013-10-29 09:58
+post-link: http://perl101.org/how-do-i.html
+---
+
+### 如何验证 Email 地址是否有效
+
+一般来说，你不能。有一些看起来合理的方法可以使用，但却没有办法检测地址
+是否实际可以投递，如果没有实际尝试投递的话。
+
+使用正则表达式：
+
+```perl
+# Match basically blah@blah.blah
+if ( $addr =~ /^\S+\@\S+\.\S+$/ ) {
+    print "Looks OK";
+}
+```
+
+如果你干真活的话，可能希望看看 CPAN 上可用的模块，比如：*Email::Address*、
+*Email::Valid*。
+
+### 如何从数据库获得数据
+
+*DBI* 及其 *DBD* 子模块，如 *DBD::SQLite*。
+
+### 如何从网页获得数据
+
+*LWP* 意为 *libwww-perl*，它是与网页交谈的标准方式。
+
+*WWW::Mechanize* 是使 HTML 处理更容易的 *LWP* 的超集。
+
+### 如何做日期计算
+
+使用 *Date::Manip*、*Date::Calc*、或 *DateTime*。全部都有不同的样式和
+不同的能力。
+
+### 如何处理程序的命令行参数
+
+使用 *Getopt::Long*。
+
+### 如何解析 HTML
+
+无论你做什么，都不要使用正则表达式。使用 *HTML::Parse* 或别的类似东东。
+如果你解析 HTML 是为了从网页提取链接或图像，不妨使用 *WWW::Mechanize*。
+
+### 如何来点颜色
+
+使用 *Term::ANSIColor*。
+
+### 如何读取键及不看到输入的密码
+
+使用 *Term::ReadKey*。
