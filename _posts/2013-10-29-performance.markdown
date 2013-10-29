@@ -27,3 +27,44 @@ while ( <> ) {
 这可能不重要。但对于更大的文件，它可能吃掉你的所有可用内存。
 
 在这种情况下使用 `while` 是一种好实践。
+
+### 避免不必要的引起和字串化
+
+除非绝对必要，不要引起大字符串：
+
+```perl
+my $copy = "$large_string";
+```
+
+这将创建两个 `$large_string` 的拷贝（一个是 `$copy`，而另一个是引起）。
+然而：
+
+```perl
+my $copy = $large_string;
+```
+
+仅创建一个拷贝。
+
+对于字串化大的数组也是一样：
+
+```perl
+{
+    local $, = "\n";
+    print @big_array;
+}
+```
+
+这比下面的代码更内存高效：
+
+```perl
+print join "\n", @big_array;
+```
+
+或：
+
+```perl
+{
+    local $" = "\n";
+    print "@big_array";
+}
+```
