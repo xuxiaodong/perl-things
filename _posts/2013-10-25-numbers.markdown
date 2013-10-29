@@ -31,3 +31,23 @@ These are not equal.
 的东东。
 
 参阅 <http://perldoc.perl.org/perlfaq4.html> 了解细节。
+
+### 数字舍入
+
+不要使用 `int()` 来做数字舍入，它只会返回整数部分。`sprintf()` 或
+`printf()` 一般够用了。
+
+```perl
+printf("%.3f", 3.1415926535);   # prints 3.142
+```
+
+如果你需要向下或向上舍入，那么可以使用 [POSIX][p] 模块所提供的 `ceil()`
+和 `floor()` 函数。其中，`ceil()` 是向上舍入，而 `floor()` 是向下舍入。
+
+```perl
+use POSIX;
+my $ceil   = ceil(3.5);   # 4
+my $floor  = floor(3.5);  # 3
+```
+
+[p]: https://metacpan.org/module/POSIX
