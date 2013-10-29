@@ -13,7 +13,7 @@ perl 为解释器，它用来执行 Perl 源文件。
 
 PERL 则是错误的称法。
 
-### Perl 不是溯写词
+### Perl 不是缩写词
 
 回溯词“Practical Extraction and Reporting Language”和“Pathologically Eclectic
 Rubbish Lister”是在 Perl 这个名称被创造之后才出现的。

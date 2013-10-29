@@ -118,7 +118,7 @@ $ perl -l foo.pl
 
 ### 利用 `heredocs` 创建长字符串
 
-Heredocs 允许连续文本，直到遇到下一个标记。支持内插，除非标记使用单引号。
+Heredocs 允许连续文本，直到遇到下一个标记。使用内插，除非标记在单引号内。
 
 ```perl
 my $page = <<HERE;
