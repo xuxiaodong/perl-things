@@ -67,3 +67,17 @@ use warnings FATAL => 'all';
 $a + 0;                      # void warning and then exits
 print "program continued\n"; # doesn't print
 ```
+
+### 使用 `perltidy` 格式化 Perl 源代码
+
+选择何种代码风格是仁者见仁，智者见智的事情。但重要的是保持风格的一致性。
+为了使格式化 Perl 源代码更容易，你可以使用 [Perl::Tidy][t] 模块随付的
+`perltidy` 工具。
+
+例如，使用 *Perl 最佳实践* 一书所推荐的风格来格式化源代码：
+
+```
+$ perltidy -pbp myprogram.pl -o myprogram.formated.pl
+```
+
+[t]: https://metacpan.org/release/Perl-Tidy
