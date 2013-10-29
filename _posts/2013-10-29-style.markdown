@@ -1,0 +1,69 @@
+---
+layout: post
+title: 风格
+date: 2013-10-29 09:01
+post-link: http://perl101.org/style.html
+---
+
+### camelCase 很糟
+
+你曾维护过别人的代码吗？你维护过像这样的代码吗？
+
+```perl
+my $variableThatContainsData =
+    someSubroutineThatMucksWithData( $someAwfulVariable );
+```
+
+混合大小写单词在 Perl 世界被称为 *camelcase*，通常它的令人不悦之处是使
+阅读代码更难。
+
+甚至具有糟糕名称的代码使用下划线也能变得更可读：
+
+```perl
+my $variable_that_contains_data = 
+    some_subroutine_that_mucks_with_data( $some_awful_variable );
+```
+
+### warnings 和 strict
+
+对于你希望维护、重用、及发布的任何程序，都应当具有下列代码行：
+
+```perl
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+```
+
+启用 `strict` 使 Perl 抱怨不确定的代码结构，比如：未声明的变量、祼字、
+以及软引用等。这些警告将导致 Perl 执行失败。
+
+```perl
+#!/usr/bin/perl
+use strict;
+
+$foo    = 4;     # undeclared variable error
+$foo    = Bar;   # bareword error
+my $bat = "foo";
+print $$bat;     # reference error
+```
+
+启用 `warnings` 使 Perl 甚至抱怨更多东东。但不像 `strict`，这些抱怨在
+一般条件下并不严重。
+
+```perl
+#!/usr/bin/perl
+use warnings;
+$a + 0;                      # void context warning
+                             # name used once warning
+                             # undef warning
+print "program continued\n"; # prints
+```
+
+如果你想要 `warnings` 变得严重，告诉它：
+
+```perl
+use warnings FATAL => 'all';
+$a + 0;                      # void warning and then exits
+print "program continued\n"; # doesn't print
+```

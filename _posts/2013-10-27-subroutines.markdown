@@ -7,7 +7,7 @@ post-link: http://perl101.org/subroutines.html
 
 ### 使用 `shift` 检索子例程的参数
 
-子例程的参数来自于特殊的 `@_` 数组。不带参数的 `shift` 默认为 `@_`。
+子例程的参数来自于特殊的 `@_` 数组。不带参数的 `shift` 默认使用 `@_`。
 
 ```perl
 sub volume {
