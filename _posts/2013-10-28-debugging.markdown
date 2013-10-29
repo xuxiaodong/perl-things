@@ -179,7 +179,7 @@ Use of uninitialized value in string eq at /Library/Perl/5.8.6/WWW/Mechanize.pm 
 
 ### 使用 Carp::Always 获得栈跟踪信息
 
-如果你不想覆盖信号处理器，那么可以安装 CPAN 模块 `Carp::Always`。
+如果你不想覆盖信号处理器，那么可以安装 CPAN 模块 [Carp::Always][c]。
 
 在安装之后，添加下行到你的代码中：
 
@@ -189,6 +189,19 @@ use Carp::Always;
 
 或者使用 `-MCarp::Always` 从命令行调用你的程序，这将总是会得到栈跟踪信息。
 
+### 使用 Devel::REPL 交互执行 Perl 代码
+
+[Devel::REPL][d] 模块提供一个交互式的 Shell。通过该 Shell，你不用创建
+临时的源代码文件就可以做快速的原型开发及测试代码。
+
+在安装 Devel::REPL 之后，你可以执行以下命令启动 Shell：
+
+```
+$ re.pl
+```
+
 [s]: http://perldoc.perl.org/strict.html
 [r]: http://perldoc.perl.org/perlref.html#Symbolic-references
 [m]: http://www.perlmonks.org/?node_id=482733
+[c]: https://metacpan.org/release/Carp-Always
+[d]: https://metacpan.org/release/Devel-REPL
