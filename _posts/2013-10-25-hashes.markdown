@@ -114,6 +114,8 @@ $hash{comedians} = @stooges;
 `keys %hash` 和 `values %hash` 的顺序实事上是随机的。每次执行程序都将不同。
 它也与添加时的顺序不相关。
 
+如果你想保留哈希元素添加时的顺序，那么可以使用 [Tie::IxHash][i] 模块。
+
 ### 你无法排序哈希
 
 在 Perl 中排序哈希的想法不存在，因为哈希是无序的。你可以排序哈希的键，
@@ -174,3 +176,5 @@ else {
 }
 # prints 'false'; since $h{'foo'} is not defined, it cannot be true
 ```
+
+[i]: https://metacpan.org/module/Tie::IxHash
