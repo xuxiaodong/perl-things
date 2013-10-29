@@ -14,7 +14,7 @@ my $variableThatContainsData =
     someSubroutineThatMucksWithData( $someAwfulVariable );
 ```
 
-混合大小写单词在 Perl 世界被称为 *camelcase*，通常它的令人不悦之处是使
+混合大小写单词在 Perl 世界被称为 *camelCase*，通常它的令人不悦之处是使
 阅读代码更难。
 
 甚至具有糟糕名称的代码使用下划线也能变得更可读：
