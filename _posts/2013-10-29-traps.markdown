@@ -1,0 +1,27 @@
+---
+layout: post
+title: 陷阱
+date: 2013-10-29 09:37
+post-link: http://perl101.org/traps.html
+---
+
+### while (\<STDIN\>)
+
+一定要小心这点。如果你不知怎么回事地得到了假值（如：空行），你的文件可能
+停止处理了。假如你在处理文件读取（除非修改了 `$/`），这种事一般不会发生，
+但却可能发生。
+
+你更喜欢这样运行：
+
+```perl
+while (readdir(DIR)) {
+```
+
+假设你有文件名为 `0` 的话，那么程序将停止，且不会继续处理文件。
+
+更合适的 `while` 循环看起来像这样：
+
+```perl
+while ( defined( my $line = <STDIN> ) ) {
+while ( defined( my $file = readdir(DIR) ) ) {
+```
