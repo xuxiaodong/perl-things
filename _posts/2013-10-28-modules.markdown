@@ -18,7 +18,7 @@ use Magic::Foo;
 
 ### 利用 Module::Starter 创建新模块
 
-`Module::Starter` 及其命令行工具 `module-starter` 创建模块发行套件的基本
+[Module::Starter][s] 及其命令行工具 `module-starter` 创建模块发行套件的基本
 框架，以便发布到 CPAN 上。它包含基本的代码布局、POD 指令、文档片断、基本
 测试、`Makefile.PL` 和 `MANIFEST` 文件、以及 `README` 和 `Changes` 记录
 的开头。
@@ -50,3 +50,114 @@ Created starter directories and files
 如果你想创建 XS 模块，即 Perl 代码与外部 C 代码的接口，那么你将需要使用
 原始的模块开始工具 `h2xs`。`h2xs` 已包含到每个 Perl 发行中，但它可能并没
 有 `Module::Starter` 那么新。除非你需要 XS 代码，否则使用 `Module::Starter`。
+
+### 利用 Dist::Zilla 创建、打包及发行模块
+
+[Dist::Zilla][z] 是一个相当好用的 Perl 模块，它使创建、打包、以及发行
+模块的过程变得十分容易。如果你打算将编写的模块发布到 CPAN 上，那么使用
+Dist::Zilla 将为你节省许多时间。
+
+#### 初始化 Dist::Zilla 配置
+
+安装 Dist::Zilla 之后的第一件事就是初始化其配置：
+
+```
+$ dzil setup
+```
+
+根据向导提供你的姓名、Email、选择版权许可、以及 PAUSE 帐号（发布模块
+到 CPAN 时需要）即可。
+
+Dist::Zilla 默认将配置文件保存在 `~/.dzil/config.ini` 文件中，所以后续
+你也可以通过修改此文件来变更相应信息。
+
+#### 创建模块
+
+执行以下命令可以创建一个新的模块，如 Foo::Bar：
+
+```
+$ dzil new Foo::Bar
+
+[DZ] making target dir /home/xiaodong/code/Foo-Bar
+[DZ] writing files to /home/xiaodong/code/Foo-Bar
+[DZ] dist minted in ./Foo-Bar
+```
+
+这将创建如下目录结构及文件：
+
+```
+Foo-Bar
+├── dist.ini
+└── lib
+    └── Foo
+            └── Bar.pm
+```
+
+其中，`dist.ini` 为该模块的配置文件，`Bar.pm` 为模块源文件。
+
+#### 打包模块
+
+待模块编写完毕，你就可以将模块打包了：
+
+```
+$ dzil build
+
+[DZ] beginning to build WebService-TaobaoIP
+[DZ] guessing dist's main_module is lib/WebService/TaobaoIP.pm
+[DZ] extracting distribution abstract from lib/WebService/TaobaoIP.pm
+[DZ] writing WebService-TaobaoIP in WebService-TaobaoIP-0.03
+defined(@array) is deprecated at /usr/share/perl5/Log/Log4perl/Config.pm line
+864.
+    (Maybe you should just omit the defined()?)
+[DZ] building archive with Archive::Tar::Wrapper
+[DZ] writing archive to WebService-TaobaoIP-0.03.tar.gz
+
+```
+
+执行该命令后，模块就会被打包成 `.tar.gz` 格式。
+
+#### 发布模块
+
+如果你要将模块发布到 CPAN 上，只需执行：
+
+```
+$ dzil release
+
+[DZ] beginning to build WebService-TaobaoIP
+[DZ] guessing dist's main_module is lib/WebService/TaobaoIP.pm
+[DZ] extracting distribution abstract from lib/WebService/TaobaoIP.pm
+[DZ] writing WebService-TaobaoIP in WebService-TaobaoIP-0.03
+defined(@array) is deprecated at /usr/share/perl5/Log/Log4perl/Config.pm line
+864.
+    (Maybe you should just omit the defined()?)
+[DZ] building archive with Archive::Tar::Wrapper
+[DZ] writing archive to WebService-TaobaoIP-0.03.tar.gz
+[@Basic/TestRelease] Extracting
+/home/xiaodong/code/WebService-TaobaoIP/WebService-TaobaoIP-0.03.tar.gz
+to .build/x8WYcGBWoY
+Checking if your kit is complete...
+Looks good
+Writing Makefile for WebService::TaobaoIP
+Writing MYMETA.yml and MYMETA.json
+cp lib/WebService/TaobaoIP.pm blib/lib/WebService/TaobaoIP.pm
+Manifying blib/man3/WebService::TaobaoIP.3pm
+No tests defined for WebService::TaobaoIP extension.
+[@Basic/TestRelease] all's well; removing .build/x8WYcGBWoY
+*** Preparing to release WebService-TaobaoIP-0.03.tar.gz with
+@Basic/UploadToCPAN ***
+
+Do you want to continue the release process? [y/N]: N
+```
+
+根据提示，回答 `y` 将发布模块，`N` 将终止发布过程。
+
+#### 其他功能
+
+Dist::Zilla 不愧为一站式工具，除上述基本功能之外，还包括添加模块到现有
+发行、执行测试、列出模块依赖等特性。
+
+有关 Dist::Zilla 的更多用法，可参考其[官方文档][d]。
+
+[s]: https://metacpan.org/module/Module::Starter
+[z]: https://metacpan.org/module/Dist::Zilla
+[d]: http://dzil.org/tutorial/contents.html
