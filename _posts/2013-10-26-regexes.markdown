@@ -12,7 +12,7 @@ post-link: http://perl101.org/regexes.html
 ### 匹配和替换返回数量
 
 `m//` 和 `s///` 操作符分别返回匹配或替换的数目。你既可以直接使用该数目，
-也可以检查其真实性。
+也可以检查其真值。
 
 ```perl
 if ( $str =~ /Diggle|Shelley/ ) {

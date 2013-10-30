@@ -249,6 +249,14 @@ my @fixed_array = map(ucfirst, map(lc, @array)); # note the nested 'map' functio
 # @fixed_array  = ( 'Red', 'Blue', 'Green' )
 ```
 
+注意：如果你修改 `$_`，源数据也会被修改。这样，上例可以修改成：
+
+```perl
+my @array = ( 'ReD', 'bLue', 'GrEEN' );
+map { $_ = ucfirst lc $_ } @array;
+# @array = ( 'Red', 'Blue', 'Green' )
+```
+
 ### 利用 `grep` 从数组选择项目
 
 `grep` 本质上也是返回列表的 `foreach` 循环。但它不像
@@ -260,7 +268,7 @@ my @new_array = grep { $_ * 9 } @array;
 # @new_array  = ( 1, 2, 3, 4, 5 );
 ```
 
-它将如 `map` 一样修改源数据，然而：
+它也将如 `map` 一样修改源数据：
 
 ```perl
 my @array     = ( 0, 1, 2, 3, 4, 5 );
